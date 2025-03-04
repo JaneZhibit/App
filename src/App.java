@@ -18,7 +18,7 @@ public class App extends JFrame {
         this.setDefaultCloseOperation(3);
         this.setSize(800, 1000);
         this.setLayout((LayoutManager)null);
-        JLabel label = new JLabel("Is this perfect?");
+        JLabel label = new JLabel("Полный балл?");
         label.setBounds(250, 300, 160, 30);
         label.setFont(new Font("Arial", 1, 20));
         //label.setBackground(Color.BLUE);
@@ -33,11 +33,11 @@ public class App extends JFrame {
         //this.add(pic);
 
         //JButton button = new JButton("click me");
-        JButton yesbutton = new JButton("Yes, it is awesome");
+        JButton yesbutton = new JButton("Да!!!");
         yesbutton.setBounds(200, 400, 200, 60);
         this.add(yesbutton);
 
-        JButton nobutton = new JButton("Sorry, no. It is a disaster");
+        JButton nobutton = new JButton("Нет, есть недочёты");
         nobutton.setBounds(400, 400, 200, 60);
         this.add(nobutton);
 
