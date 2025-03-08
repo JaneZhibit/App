@@ -12,6 +12,7 @@ public class MyButtonListener implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
+
         this.messageLabel.setText(this.message);
     }
 }
