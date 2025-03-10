@@ -52,7 +52,15 @@ public class App extends JFrame {
         panel.add(upgradesButton);
 
         // добавление действий к кнопкам
-        ExitButtonListener exitListener = new ExitButtonListener();
+        JLabel goodbyeLabel = new JLabel("До свидания!");
+        goodbyeLabel.setBounds(600, 0, w, h); // Растягиваем на весь экран
+        goodbyeLabel.setFont(new Font("Arial", Font.BOLD, 72)); // Большой шрифт
+        goodbyeLabel.setForeground(Color.WHITE);
+        goodbyeLabel.setOpaque(false); // Прозрачный фон
+        goodbyeLabel.setVisible(false);
+        panel.add(goodbyeLabel);
+
+        ExitButtonListener exitListener = new ExitButtonListener(goodbyeLabel, this);
         exitButton.addActionListener(exitListener);
 
 
@@ -154,7 +162,7 @@ public class App extends JFrame {
         getContentPane().add(panel);
         panel.setBounds(0, 0, w, h);
 
-        JButton backButton = new JButton("Назад (это временный вариант)");
+        JButton backButton = new JButton("Назад (временный вариант)");
         backButton.setBounds(w / 17, 6 * h / 8, w / 4, h / 10);
         panel.add(backButton);
         backButton.addActionListener(e -> {
@@ -189,10 +197,23 @@ public class App extends JFrame {
 
                 // забавно, но для сравнения строк в java нужно использовать .equals()
                 if (keyName.equals(moveUpKey)) {
-                    player.setLocation(player.getX(), player.getY() - step);
+                    // Новая позиция после движения вверх
+                    int newY = player.getY() - step;
+
+                    // Проверка, чтобы игрок не вылетел за верхнюю границу
+                    if (newY >= -120) {
+                        player.setLocation(player.getX(), newY);
+                    }
                 } else if (keyName.equals(moveDownKey)) {
-                    player.setLocation(player.getX(), player.getY() + step);
+                    // Новая позиция после движения вниз
+                    int newY = player.getY() + step;
+
+                    // Проверка, чтобы игрок не вылетел за нижнюю границу
+                    if (newY <= h - 180) {
+                        player.setLocation(player.getX(), newY);
+                    }
                 }
+
             }
         });
 
