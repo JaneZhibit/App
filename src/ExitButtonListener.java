@@ -2,12 +2,12 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ExitButtonListener implements ActionListener {private JLabel goodbyeLabel;
-    private JFrame frame;
+public class ExitButtonListener implements ActionListener {
+    private JLabel goodbyeLabel;
+    private static JFrame frame = App.getProxy().getFrame();
 
-    public ExitButtonListener(JLabel goodbyeLabel, JFrame frame) {
+    public ExitButtonListener(JLabel goodbyeLabel) {
         this.goodbyeLabel = goodbyeLabel;
-        this.frame = frame;
     }
 
     @Override
