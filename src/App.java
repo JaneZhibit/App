@@ -30,6 +30,7 @@ public class App extends JFrame {
         return proxy;
     }
 
+    // данная функция нужна для передачи экрана для надписи, которую ты добавила(:
     public JFrame getFrame(){
         return this;
     }

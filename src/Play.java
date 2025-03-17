@@ -5,9 +5,10 @@ public class Play {
     private static Play proxy;
     private JPanel panel;
     private JLabel player;
-    private int w = App.getProxy().w, h = App.getProxy().h;
-    private int step = 15; // Шаг движения
+    private int w = App.getProxy().w;
+    private int h = App.getProxy().h;
     private String moveUpKey, moveDownKey; // Бинды клавиш
+    private PlayersPhysics playersPhysics = PlayersPhysics.getProxy();
 
     private Play() {
         initPanel();
@@ -40,13 +41,7 @@ public class Play {
     }
 
     private void initPlayer() {
-        player = new JLabel(new ImageIcon("src/pics/player.png"));
-        int playerX = w / 20;
-        int playerY = h / 3;
-        int playerWidth = 609;
-        int playerHeight = 359;
-        player.setBounds(playerX, playerY, playerWidth, playerHeight);
-        panel.add(player);
+       panel.add(playersPhysics.getPlayer());
     }
 
     private void initBackground() {
@@ -67,19 +62,16 @@ public class Play {
                 String keyName = KeyEvent.getKeyText(e.getKeyCode());
 
                 if (keyName.equals(moveUpKey)) {
-                    movePlayer(-step);
+                    playersPhysics.moveUp();
                 } else if (keyName.equals(moveDownKey)) {
-                    movePlayer(step);
+                    playersPhysics.moveDown();
                 }
             }
-        });
-    }
+            @Override
+            public void keyReleased(KeyEvent e){
 
-    private void movePlayer(int deltaY) {
-        int newY = player.getY() + deltaY;
-        if (newY >= 0 && newY <= h - 360) {
-            player.setLocation(player.getX(), newY);
-        }
+            }
+        });
     }
 
     // понял, почему у тебя не двигался игрок
@@ -94,4 +86,5 @@ public class Play {
     public JPanel getPanel() {
         return panel;
     }
+
 }
