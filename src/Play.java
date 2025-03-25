@@ -69,7 +69,7 @@ public class Play {
             }
             @Override
             public void keyReleased(KeyEvent e){
-
+                playersPhysics.keyReleased();
             }
         });
     }

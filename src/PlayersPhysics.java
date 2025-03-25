@@ -1,44 +1,94 @@
 import javax.swing.*;
-import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
+import javax.swing.Timer;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class PlayersPhysics {
     private static PlayersPhysics proxy;
     private JLabel player;
+    private ImageIcon originalIcon;
     private int h = App.getProxy().h;
     private int w = App.getProxy().w;
 
-    private PlayersPhysics(){
+    private double angle = 0; // Текущий угол
+    private double targetAngle = 0; // Желаемый угол
+    private final double angleStep = 0.035; // Шаг изменения угла
+    private final double maxAngle = 0.4; // Максимальный угол
+
+    private int baseSpeed = 0; // Базовая скорость (потом поиграемся)
+    private final double speedMultiplier = 40; // Чем круче угол, тем выше скорость
+
+    private Timer rotationTimer; // Таймер для плавного изменения угла
+
+    private PlayersPhysics() {
         initPlayer();
+
+        // Таймер для плавного изменения угла
+        rotationTimer = new Timer(30, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateRotation();
+            }
+        });
+        rotationTimer.start();
     }
 
     private void initPlayer() {
-        player = new JLabel(new ImageIcon("src/pics/player.png"));
+        originalIcon = new ImageIcon("src/pics/player.png");
+        player = new JLabel(originalIcon);
         int playerX = w / 30;
         int playerY = h / 3;
-        int playerWidth = 420;
-        int playerHeight = 225;
+        int playerWidth = 420 + 420/3;
+        int playerHeight = 225 + 225/3;
         player.setBounds(playerX, playerY, playerWidth, playerHeight);
     }
 
-    public JLabel getPlayer(){
+    public JLabel getPlayer() {
         return player;
     }
 
-    public void moveUp(){
-        movePlayer(-15);
+    public void moveUp() {
+        targetAngle = -maxAngle; // Устанавливаем целевой угол
     }
 
-    public void moveDown(){
-        movePlayer(15);
+    public void moveDown() {
+        targetAngle = maxAngle; // Устанавливаем целевой угол
     }
 
+    public void keyReleased() {
+        targetAngle = 0; // Возвращаем в горизонтальное положение
+    }
 
-    public void movePlayer(int deltaY) {
+    private void movePlayer(int deltaY) {
         int newY = player.getY() + deltaY;
-        if (newY >= 10 && newY <= h - 260) {
-            player.setLocation(player.getX(), newY);
+
+        // Проверяем границы
+        if (newY <= 0) {
+            newY = 0;
+        }
+        if (newY >= h - 280) {
+            newY = h - 280;
+        }
+
+        player.setLocation(player.getX(), newY);
+    }
+
+    private void updateRotation() {
+        if (angle < targetAngle) {
+            angle = Math.min(angle + angleStep, targetAngle);
+        } else if (angle > targetAngle) {
+            angle = Math.max(angle - angleStep, targetAngle);
+        }
+
+        // Обновляем изображение
+        player.setIcon(ImageUtils.rotateImage(originalIcon, angle));
+
+        // Рассчитываем скорость и перемещаем игрока
+        int speed = (int) (baseSpeed + Math.abs(angle) * speedMultiplier);
+        if (angle < 0) {
+            movePlayer(-speed);
+        } else if (angle > 0) {
+            movePlayer(speed);
         }
     }
 
@@ -48,6 +98,4 @@ public class PlayersPhysics {
         }
         return proxy;
     }
-
-
 }
