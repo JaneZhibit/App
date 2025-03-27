@@ -34,12 +34,12 @@ public class PlayersPhysics {
     }
 
     private void initPlayer() {
-        originalIcon = new ImageIcon("src/pics/player.png");
+        originalIcon = new ImageIcon("src/pics/player_min.png");
         player = new JLabel(originalIcon);
         int playerX = w / 30;
         int playerY = h / 3;
-        int playerWidth = 420 + 420/3;
-        int playerHeight = 225 + 225/3;
+        int playerWidth = 336 + 336/3;
+        int playerHeight = 180 + 180/3;
         player.setBounds(playerX, playerY, playerWidth, playerHeight);
     }
 
@@ -63,11 +63,11 @@ public class PlayersPhysics {
         int newY = player.getY() + deltaY;
 
         // Проверяем границы
-        if (newY <= 0) {
-            newY = 0;
+        if (newY <= 5) {
+            newY = 5;
         }
-        if (newY >= h - 280) {
-            newY = h - 280;
+        if (newY >= h - 230) {
+            newY = h - 230;
         }
 
         player.setLocation(player.getX(), newY);

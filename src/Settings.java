@@ -83,6 +83,8 @@ public class Settings {
     }
 
     private void saveSettings() {
+        SoundPlayer gameClick = new SoundPlayer("src/audio/click_sound.wav");
+        gameClick.play();
         App.getProxy().getConfig().setProperty("moveDownKey", moveDownButton.getText());
         App.getProxy().getConfig().setProperty("moveUpKey", moveUpButton.getText());
         App.getProxy().getConfig().setProperty("difficulty", (String) difficultyBox.getSelectedItem());

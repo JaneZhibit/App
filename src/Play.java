@@ -4,11 +4,12 @@ import java.awt.event.*;
 public class Play {
     private static Play proxy;
     private JPanel panel;
-    private JLabel player;
     private int w = App.getProxy().w;
     private int h = App.getProxy().h;
     private String moveUpKey, moveDownKey; // Бинды клавиш
     private PlayersPhysics playersPhysics = PlayersPhysics.getProxy();
+
+    private final SoundPlayer backgroundMusic = new SoundPlayer("src/audio/game_theme.wav");
 
     private Play() {
         initPanel();
@@ -36,7 +37,10 @@ public class Play {
     private void initButtons() {
         JButton backButton = new JButton("Назад");
         backButton.setBounds(w / 17, 6 * h / 8, w / 4, h / 10);
-        backButton.addActionListener(e -> App.getProxy().showMenu());
+        backButton.addActionListener(e -> {
+            backgroundMusic.stop();
+            App.getProxy().showMenu();
+        });
         panel.add(backButton);
     }
 
@@ -74,9 +78,9 @@ public class Play {
         });
     }
 
-    // понял, почему у тебя не двигался игрок
-    // данная функция следит за фокусом на panel
-    // вызывается из app, можно обойтись без функции
+    public void playMusic(){
+        backgroundMusic.loop();
+    }
 
     public void requestFocus() {
         panel.setFocusable(true);

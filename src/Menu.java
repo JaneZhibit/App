@@ -13,6 +13,8 @@ public class Menu {
     private final JButton settingsButton = new JButton("Настройки");
     private final JButton exitButton = new JButton("Выйти");
 
+    private final SoundPlayer backgroundMusic = new SoundPlayer("src/audio/main_theme.wav");
+
     private JLabel goodbyeLabel;
 
     public Menu() {
@@ -60,9 +62,17 @@ public class Menu {
     }
 
     private void setupListeners() {
-        playButton.addActionListener(e -> App.getProxy().showPlay());
+        SoundPlayer gameClick = new SoundPlayer("src/audio/click_sound.wav");
+        playButton.addActionListener(e -> {
+                backgroundMusic.stop();
+                gameClick.play();
+                App.getProxy().showPlay();
+        });
         upgradesButton.addActionListener(new UpgradesButtonListener());
-        settingsButton.addActionListener(e -> App.getProxy().showSettings());
+        settingsButton.addActionListener(e -> {
+            gameClick.play();
+            App.getProxy().showSettings();
+        });
         exitButton.addActionListener(new ExitButtonListener(goodbyeLabel));
     }
 
@@ -71,6 +81,10 @@ public class Menu {
         JLabel bg = new JLabel(new ImageIcon("src/pics/menu_bg.png"));
         bg.setBounds(0, 0, w, h);
         panel.add(bg);
+    }
+
+    public void playMusic(){
+        backgroundMusic.loop();
     }
 
     public JPanel getPanel() {

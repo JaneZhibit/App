@@ -38,6 +38,7 @@ public class App extends JFrame {
     public void showMenu() {
         getContentPane().removeAll();
         getContentPane().add(Menu.getProxy().getPanel());
+        Menu.getProxy().playMusic();
         revalidate();
         repaint();
     }
@@ -45,6 +46,7 @@ public class App extends JFrame {
     public void showPlay() {
         getContentPane().removeAll();
         getContentPane().add(Play.getProxy().getPanel());
+        Play.getProxy().playMusic();
         revalidate();
         repaint();
         /* можно передавать фокус так
