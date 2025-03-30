@@ -4,6 +4,7 @@
  */
 
 import javax.swing.*;
+import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.Properties;
 
@@ -35,6 +36,7 @@ public class App extends JFrame {
         return this;
     }
 
+
     public void showMenu() {
         getContentPane().removeAll();
         getContentPane().add(Menu.getProxy().getPanel());
@@ -64,6 +66,44 @@ public class App extends JFrame {
         revalidate();
         repaint();
     }
+
+    public void showSorting() {
+        getContentPane().removeAll();
+
+        // Кнопка "Сортировать"
+        JButton genButton = new JButton("Генерация");
+        genButton.setBounds(210, 20, 200, 30);
+        add(genButton);
+
+        JButton sortButton = new JButton("Сортировать");
+        sortButton.setBounds(420, 20, 200, 30);
+        add(sortButton);
+
+        // Панель сортировки
+        Sorting sorting = new Sorting(50);
+        sorting.setBounds(0, 50, w, h-50);
+        add(sorting);
+
+        // Обработчик для кнопок
+
+        genButton.addActionListener(e -> sorting.gen());
+
+        sortButton.addActionListener(e -> sorting.startSorting());
+
+        // Кнопка "Назад"
+        JButton backButton = new JButton("Назад");
+        backButton.setBounds(20, 20, 100, 30);
+        backButton.addActionListener(e -> showMenu());
+        add(backButton);
+
+
+
+        revalidate();
+        repaint();
+    }
+
+
+
 
     private void loadConfig() {
         config = new Properties();
