@@ -4,7 +4,6 @@
  */
 
 import javax.swing.*;
-import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.Properties;
 
@@ -36,7 +35,6 @@ public class App extends JFrame {
         return this;
     }
 
-
     public void showMenu() {
         getContentPane().removeAll();
         getContentPane().add(Menu.getProxy().getPanel());
@@ -47,18 +45,14 @@ public class App extends JFrame {
 
     public void showPlay() {
         getContentPane().removeAll();
-        getContentPane().add(Play.getProxy().getPanel());
-        Play.getProxy().playMusic();
+        Play newPlayInstance = new Play(); // Создаем новую игру
+        getContentPane().add(newPlayInstance.getPanel());
+        newPlayInstance.playMusic();
         revalidate();
         repaint();
-        /* можно передавать фокус так
-        Play.getProxy().getPanel().setFocusable(true);
-        Play.getProxy().getPanel().requestFocusInWindow();
-         */
-
-        // или так (хз, как лучше)
-        Play.getProxy().requestFocus();
+        newPlayInstance.requestFocus();
     }
+
 
     public void showSettings() {
         getContentPane().removeAll();
@@ -80,12 +74,11 @@ public class App extends JFrame {
         add(sortButton);
 
         // Панель сортировки
-        Sorting sorting = new Sorting(50);
+        Sorting sorting = new Sorting(300);
         sorting.setBounds(0, 50, w, h-50);
         add(sorting);
 
         // Обработчик для кнопок
-
         genButton.addActionListener(e -> sorting.gen());
 
         sortButton.addActionListener(e -> sorting.startSorting());
@@ -96,14 +89,9 @@ public class App extends JFrame {
         backButton.addActionListener(e -> showMenu());
         add(backButton);
 
-
-
         revalidate();
         repaint();
     }
-
-
-
 
     private void loadConfig() {
         config = new Properties();

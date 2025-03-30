@@ -1,3 +1,7 @@
+/*
+Класс, отвечающий за логику быстрой сортировки и её отображения
+ */
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Random;
@@ -85,7 +89,7 @@ public class Sorting extends JPanel implements Runnable {
                 swap(arr, i, j);
             }
             try {
-                Thread.sleep(10);
+                Thread.sleep(5);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }

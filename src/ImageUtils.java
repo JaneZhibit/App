@@ -6,6 +6,7 @@ import javax.swing.*;
 public class ImageUtils {
     public static ImageIcon rotateImage(ImageIcon icon, double angle) {
         Image img = icon.getImage();
+        // для корректных манипуляций с поворотом изображение увеличивается до 4/3 от полного
         int w = img.getWidth(null) + img.getWidth(null)/3;
         int h = img.getHeight(null) + img.getHeight(null)/3;
 
@@ -20,4 +21,6 @@ public class ImageUtils {
 
         return new ImageIcon(rotatedImage);
     }
+
+    // возможно будут ещё функции для работы с изображениями
 }

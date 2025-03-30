@@ -24,4 +24,4 @@ public class ExitButtonListener implements ActionListener {
         timer.setRepeats(false);
         timer.start();
     }
-    }
+}

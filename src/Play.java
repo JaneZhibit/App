@@ -1,40 +1,27 @@
 import javax.swing.*;
 import java.awt.event.*;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Random;
-
 public class Play {
     private static Play proxy;
     private JPanel panel;
     private int w = App.getProxy().w;
     private int h = App.getProxy().h;
     private String moveUpKey, moveDownKey;
-    private PlayersPhysics playersPhysics = PlayersPhysics.getProxy();
+    private PlayersPhysics playersPhysics = new PlayersPhysics();
     private ParallaxBG parallaxBackground;
-
-    private ArrayList<EnemyNPC> enemies = new ArrayList<>();
-    private int playerHealth = 3; // Количество жизней игрока
+    private ScoreCounter score = new ScoreCounter();
 
     private final SoundPlayer backgroundMusic = new SoundPlayer("src/audio/game_theme.wav");
 
-    private Play() {
+    public Play() {
         initPanel();
+        panel.add(score.getScoreLabel());
         initButtons();
         initPlayer();
         initBackground();
         initKeyListener();
-        startEnemySpawner();
         updateKeyBindings();
-    }
 
-    public static Play getProxy() {
-        if (proxy == null) {
-            proxy = new Play();
-        }
-        proxy.updateKeyBindings();
-        return proxy;
     }
 
     private void initPanel() {
@@ -43,11 +30,19 @@ public class Play {
         panel.setOpaque(false);
     }
 
+
+
     private void initButtons() {
-        JButton backButton = new JButton("Назад");
-        backButton.setBounds(w / 17, 6 * h / 8, w / 4, h / 10);
+        JButton backButton = new JButton();
+        ImageIcon buttonIcon = new ImageIcon("src/pics/backButton.png");
+        int iconH = buttonIcon.getIconHeight(), iconW = buttonIcon.getIconWidth();
+        backButton.setIcon(buttonIcon);
+        backButton.setBounds(w - iconW - 30, 20, iconW, iconH);
         backButton.addActionListener(e -> {
             backgroundMusic.stop();
+            parallaxBackground.stop();
+            score.stopScoreUpdater();
+            deleteObjects();
             App.getProxy().showMenu();
         });
         panel.add(backButton);
@@ -68,7 +63,6 @@ public class Play {
         int[] yPositions = {0, h - 573, h - 299};
         int[] layerWidths = {2024, 2024, 2024};
         int[] layerHeights = {768, 573, 299};
-
         parallaxBackground = new ParallaxBG(backgrounds, speeds, yPositions, layerWidths, layerHeights, w, h);
         panel.add(parallaxBackground);
     }
@@ -98,48 +92,8 @@ public class Play {
         });
     }
 
-    private void startEnemySpawner() {
-        Thread enemySpawner = new Thread(() -> {
-            Random rand = new Random();
-            while (true) {
-                try {
-                    Thread.sleep(rand.nextInt(2000) + 1000); // Пауза 1-3 сек между спавном
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                spawnEnemy();
-            }
-        });
-        enemySpawner.setDaemon(true);
-        enemySpawner.start();
-    }
-
-    private void spawnEnemy() {
-        EnemyNPC enemy = new EnemyNPC("src/pics/enemy.png", w, h, playersPhysics, this);
-        enemies.add(enemy);
-        panel.add(enemy);
-        panel.setComponentZOrder(enemy, 0); // Убедимся, что враги поверх фона
-
-        Thread enemyThread = new Thread(enemy);
-        enemyThread.start();
-    }
-
-    public void removeEnemy(EnemyNPC enemy) {
-        SwingUtilities.invokeLater(() -> {
-            panel.remove(enemy);
-            enemies.remove(enemy);
-            panel.repaint();
-        });
-    }
-
-    public void reducePlayerHealth() {
-        playerHealth--;
-        System.out.println("Игрок получил урон! Оставшиеся жизни: " + playerHealth);
-        if (playerHealth <= 0) {
-            System.out.println("Игра окончена!");
-            backgroundMusic.stop();
-            App.getProxy().showMenu(); // Можно сделать экран поражения
-        }
+    private void deleteObjects(){
+        playersPhysics = null;
     }
 
     public void playMusic() {

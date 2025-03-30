@@ -1,3 +1,7 @@
+/*
+Класс отображения настроек и сохранения настроек
+ */
+
 import javax.swing.*;
 
 public class Settings {
@@ -82,6 +86,7 @@ public class Settings {
         return label;
     }
 
+    // действие при нажатии на кнопку сохранения
     private void saveSettings() {
         SoundPlayer gameClick = new SoundPlayer("src/audio/click_sound.wav");
         gameClick.play();

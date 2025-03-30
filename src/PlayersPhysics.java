@@ -20,7 +20,7 @@ public class PlayersPhysics {
 
     private Timer rotationTimer; // Таймер для плавного изменения угла
 
-    private PlayersPhysics() {
+    public PlayersPhysics() {
         initPlayer();
 
         // Таймер для плавного изменения угла
@@ -92,10 +92,4 @@ public class PlayersPhysics {
         }
     }
 
-    public static PlayersPhysics getProxy() {
-        if (proxy == null) {
-            proxy = new PlayersPhysics();
-        }
-        return proxy;
-    }
 }

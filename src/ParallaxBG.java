@@ -1,23 +1,19 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class ParallaxBG extends JPanel {
+public class ParallaxBG extends JPanel implements Runnable {
     private Image[] layers;
     private int[] xPositions;
     private int[] yPositions;
     private int[] layerWidths;
     private int[] layerHeights;
     private int[] speeds;
-    private int panelWidth, panelHeight;
 
-    private Timer timer;
+    private Thread animationThread;
+    private volatile boolean running = true;
 
-    public ParallaxBG(String[] imagePaths, int[] speeds, int[] yPositions, int[] layerWidths, int[] layerHeights, int panelWidth, int panelHeight) {
-        this.panelWidth = panelWidth;
-        this.panelHeight = panelHeight;
-
+    public ParallaxBG(String[] imagePaths, int[] speeds, int[] yPositions,
+                      int[] layerWidths, int[] layerHeights, int panelWidth, int panelHeight) {
         int layerCount = imagePaths.length;
         layers = new Image[layerCount];
         xPositions = new int[layerCount];
@@ -34,13 +30,21 @@ public class ParallaxBG extends JPanel {
         setOpaque(false);
         setBounds(0, 0, panelWidth, panelHeight);
 
-        timer = new Timer(30, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                moveBackground();
+        animationThread = new Thread(this);
+        animationThread.start();
+    }
+
+    @Override
+    public void run() {
+        while (running) {
+            moveBackground();
+            repaint();
+            try {
+                Thread.sleep(30); // Регулировка скорости анимации
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
             }
-        });
-        timer.start();
+        }
     }
 
     private void moveBackground() {
@@ -52,7 +56,6 @@ public class ParallaxBG extends JPanel {
                 xPositions[i] += layerWidths[i];
             }
         }
-        repaint();
     }
 
     @Override
@@ -61,6 +64,17 @@ public class ParallaxBG extends JPanel {
         for (int i = 0; i < layers.length; i++) {
             g.drawImage(layers[i], xPositions[i], yPositions[i], layerWidths[i], layerHeights[i], null);
             g.drawImage(layers[i], xPositions[i] + layerWidths[i], yPositions[i], layerWidths[i], layerHeights[i], null);
+        }
+    }
+
+    public void stop() {
+        running = false;
+        try {
+            if (animationThread != null) {
+                animationThread.join();
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
     }
 }
