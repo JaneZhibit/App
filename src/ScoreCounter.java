@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 
 public class ScoreCounter {
     private JLabel scoreLabel; // Для отображения счета
@@ -9,7 +10,7 @@ public class ScoreCounter {
     public ScoreCounter(){
         // Инициализация JLabel для счета
         scoreLabel = new JLabel("Счёт: 0");
-        scoreLabel.setBounds(10, 10, 100, 30); // Позиция и размер
+        scoreLabel.setBounds(10, 10, 150, 30); // Позиция и размер
         startScoreUpdater();
     }
 
@@ -22,6 +23,7 @@ public class ScoreCounter {
                     Thread.sleep(50); // Обновляем счет каждую секунду
                     score++; // Увеличиваем счет
                     scoreLabel.setText("Score: " + score);
+                    scoreLabel.setFont(new Font("Arial",1, 20));
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt(); // Восстанавливаем статус прерывания
                     break; // Выход из цикла при прерывании потока

@@ -4,6 +4,7 @@
  */
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.*;
 import java.util.Properties;
 
@@ -74,7 +75,7 @@ public class App extends JFrame {
         add(sortButton);
 
         // Панель сортировки
-        Sorting sorting = new Sorting(300);
+        Sorting sorting = new Sorting(200);
         sorting.setBounds(0, 50, w, h-50);
         add(sorting);
 
@@ -89,8 +90,33 @@ public class App extends JFrame {
         backButton.addActionListener(e -> showMenu());
         add(backButton);
 
+        // В методе showSorting():
+        JLabel greenLabel = new JLabel("Столбцы");
+        greenLabel.setBounds(20, 70, 120, 20); // x=20, y=70 (над панелью сортировки)
+        greenLabel.setOpaque(true); // Разрешаем фон
+        greenLabel.setBackground(new Color(0, 255, 0, 150)); // Полупрозрачный белый
+
+        JLabel redLabel = new JLabel("Текущий элемент");
+        redLabel.setBounds(20, 90, 150, 20);
+        redLabel.setOpaque(true);
+        redLabel.setBackground(new Color(255, 0, 0, 150));
+
+        JLabel blueLabel = new JLabel("Опорный элемент");
+
+        blueLabel.setBounds(20, 110, 150, 20);
+        blueLabel.setOpaque(true);
+        blueLabel.setBackground(new Color(0, 0, 255, 255));
+
+// Добавляем метки ПОСЛЕ панели сортировки
+        add(greenLabel);
+        add(redLabel);
+        add(blueLabel);
+
+
         revalidate();
         repaint();
+
+
     }
 
     private void loadConfig() {

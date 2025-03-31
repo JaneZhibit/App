@@ -14,6 +14,7 @@ public class Sorting extends JPanel implements Runnable {
     private int compareIndex = -1;
 
     public Sorting(int N) {
+        setOpaque(false);
         this.N = N;
         arr = new int[N];
         gen();
@@ -37,6 +38,7 @@ public class Sorting extends JPanel implements Runnable {
     @Override
     public void paint(Graphics g) {
         setBackground(Color.LIGHT_GRAY);
+
 
         super.paint(g);
         int barWidth = getWidth() / N;
