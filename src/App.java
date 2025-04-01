@@ -107,7 +107,6 @@ public class App extends JFrame {
         blueLabel.setOpaque(true);
         blueLabel.setBackground(new Color(0, 0, 255, 255));
 
-// Добавляем метки ПОСЛЕ панели сортировки
         add(greenLabel);
         add(redLabel);
         add(blueLabel);

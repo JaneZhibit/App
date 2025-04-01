@@ -20,8 +20,12 @@ public class PlayersPhysics {
 
     private Timer rotationTimer; // Таймер для плавного изменения угла
 
+    private volatile int currentFrameIndex = 0;
+    private Thread animationThread;
+
     public PlayersPhysics() {
         initPlayer();
+        initAnimation();
 
         // Таймер для плавного изменения угла
         rotationTimer = new Timer(30, new ActionListener() {
@@ -90,6 +94,43 @@ public class PlayersPhysics {
         } else if (angle > 0) {
             movePlayer(speed);
         }
+    }
+    private void initAnimation() {
+        ImageIcon[] animationFrames = new ImageIcon[]{
+                new ImageIcon("src/pics/player/plr0.png"),
+                new ImageIcon("src/pics/player/plr1.png"),
+                new ImageIcon("src/pics/player/plr2.png"),
+                new ImageIcon("src/pics/player/plr3.png"),
+                new ImageIcon("src/pics/player/plr4.png"),
+                new ImageIcon("src/pics/player/plr5.png"),
+                new ImageIcon("src/pics/player/plr6.png"),
+                new ImageIcon("src/pics/player/plr7.png"),
+                new ImageIcon("src/pics/player/plr8.png"),
+                new ImageIcon("src/pics/player/plr9.png"),
+                new ImageIcon("src/pics/player/plr10.png"),
+                new ImageIcon("src/pics/player/plr11.png"),
+                new ImageIcon("src/pics/player/plr12.png")
+        };
+
+
+        originalIcon = animationFrames[0];
+
+        animationThread = new Thread(() -> {
+            while (!Thread.currentThread().isInterrupted()) {
+                try {
+                    Thread.sleep(200);
+                    SwingUtilities.invokeLater(() -> {
+                        currentFrameIndex = (currentFrameIndex + 1) % animationFrames.length;
+                        originalIcon = animationFrames[currentFrameIndex];
+                        updateRotation();
+                    });
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        });
+        animationThread.setDaemon(true);
+        animationThread.start();
     }
 
 }
