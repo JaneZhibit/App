@@ -40,7 +40,7 @@ public class ParallaxBG extends JPanel implements Runnable {
             moveBackground();
             repaint();
             try {
-                Thread.sleep(30); // Регулировка скорости анимации
+                Thread.sleep(30);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }

@@ -14,36 +14,41 @@ public class ScoreCounter {
         startScoreUpdater();
     }
 
+    public int getScore(){
+        return score;
+    }
 
     private void startScoreUpdater() {
         running = true;
         scoreThread = new Thread(() -> {
             while (running) {
                 try {
-                    Thread.sleep(50); // Обновляем счет каждую секунду
-                    score++; // Увеличиваем счет
+                    Thread.sleep(50);
+                    score++;
                     scoreLabel.setText("Score: " + score);
                     scoreLabel.setFont(new Font("Arial",1, 20));
                 } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt(); // Восстанавливаем статус прерывания
-                    break; // Выход из цикла при прерывании потока
+                    Thread.currentThread().interrupt();
+                    break;
                 }
             }
         });
-        scoreThread.setDaemon(true); // Делаем поток демоном
-        scoreThread.start(); // Запускаем поток
+        scoreThread.setDaemon(true);
+        scoreThread.start();
     }
 
     public void stopScoreUpdater() {
-        // Устанавливаем флаг в false для остановки потока
         running = false;
         if (scoreThread != null) {
-            // Прерываем поток, если он спит
             scoreThread.interrupt();
         }
     }
 
     public JLabel getScoreLabel(){
         return scoreLabel;
+    }
+
+    public void add(int amount) {
+        score += amount;
     }
 }

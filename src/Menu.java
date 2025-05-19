@@ -11,13 +11,9 @@ public class Menu {
     private final JButton playButton = new JButton("Играть");
     private final JButton upgradesButton = new JButton("Улучшения");
     private final JButton settingsButton = new JButton("Настройки");
-    private final JButton sortingButton = new JButton("Сортировка");
     private final JButton exitButton = new JButton("Выйти");
 
     private final SoundPlayer backgroundMusic = new SoundPlayer("src/audio/main_theme.wav");
-
-    private JLabel goodbyeLabel;
-
 
     public Menu() {
         initPanel();
@@ -50,20 +46,9 @@ public class Menu {
         settingsButton.setBounds(w / 17, 5 * h / 8, w / 4, h / 10);
         panel.add(settingsButton);
 
-
         exitButton.setBounds(w / 17, 6 * h / 8, w / 4, h / 10);
         panel.add(exitButton);
 
-        sortingButton.setBounds(800, 6 * h / 8, w / 4, h / 10); // Исправленная позиция
-        panel.add(sortingButton);
-
-        goodbyeLabel = new JLabel("До свидания!");
-        goodbyeLabel.setBounds(600, 0, w, h);
-        goodbyeLabel.setFont(new Font("Arial", Font.BOLD, 72));
-        goodbyeLabel.setForeground(Color.WHITE);
-        goodbyeLabel.setOpaque(false);
-        goodbyeLabel.setVisible(false);
-        panel.add(goodbyeLabel);
     }
 
     private void setupListeners() {
@@ -73,17 +58,17 @@ public class Menu {
                 gameClick.play();
                 App.getProxy().showPlay();
         });
-        upgradesButton.addActionListener(new UpgradesButtonListener());
+        upgradesButton.addActionListener(e -> {
+            gameClick.play();
+            App.getProxy().showUpgrades();
+        });
+
         settingsButton.addActionListener(e -> {
             gameClick.play();
             App.getProxy().showSettings();
         });
-        sortingButton.addActionListener(e -> {
-            gameClick.play();
-            App.getProxy().showSorting(); // Переключаемся на экран сортировки
-        });
 
-        exitButton.addActionListener(new ExitButtonListener(goodbyeLabel));
+        exitButton.addActionListener(e -> System.exit(0));
     }
 
     // для красоты конструктора решил вынести в отдельную функци

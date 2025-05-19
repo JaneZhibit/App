@@ -1,5 +1,6 @@
 import javax.swing.*;
 import javax.swing.Timer;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -12,20 +13,40 @@ public class PlayersPhysics {
 
     private double angle = 0; // Текущий угол
     private double targetAngle = 0; // Желаемый угол
-    private final double angleStep = 0.035; // Шаг изменения угла
-    private final double maxAngle = 0.4; // Максимальный угол
+    private double angleStep = 0.035; // Шаг изменения угла
+    private double maxAngle = 0.4; // Максимальный угол
 
     private int baseSpeed = 0; // Базовая скорость (потом поиграемся)
-    private final double speedMultiplier = 40; // Чем круче угол, тем выше скорость
+    private double speedMultiplier = 40; // Чем круче угол, тем выше скорость
 
     private Timer rotationTimer; // Таймер для плавного изменения угла
 
     private volatile int currentFrameIndex = 0;
     private Thread animationThread;
 
-    public PlayersPhysics() {
+    private int lives;
+    private JLabel livesLabel;
+
+
+    public PlayersPhysics(int startLives) {
+        this.lives = startLives;
+
+        String broomName = App.getProxy().getSelectedBroomName();
+        Broom broom = Broom.valueOf(broomName);
+
+        this.angleStep = broom.angleStep;
+        this.maxAngle = broom.maxAngle;
+        this.baseSpeed = broom.baseSpeed;
+        this.speedMultiplier = broom.speedMultiplier;
+
+
         initPlayer();
         initAnimation();
+
+        livesLabel = new JLabel("Жизни: " + lives);
+        livesLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        livesLabel.setForeground(Color.BLACK);
+        livesLabel.setBounds(10, 40, 150, 30); // Положение на экране
 
         // Таймер для плавного изменения угла
         rotationTimer = new Timer(30, new ActionListener() {
@@ -46,6 +67,17 @@ public class PlayersPhysics {
         int playerHeight = 180 + 180/3;
         player.setBounds(playerX, playerY, playerWidth, playerHeight);
     }
+
+    public boolean damage() {
+        lives--;
+        livesLabel.setText("Жизни: " + lives);
+        return lives <= 0;
+    }
+
+    public JLabel getLivesLabel() {
+        return livesLabel;
+    }
+
 
     public JLabel getPlayer() {
         return player;
@@ -95,6 +127,13 @@ public class PlayersPhysics {
             movePlayer(speed);
         }
     }
+
+    public Rectangle getHitbox() {
+        Rectangle bounds = player.getBounds();
+        return new Rectangle(bounds.x, bounds.y,
+                336, 180);
+    }
+
     private void initAnimation() {
         ImageIcon[] animationFrames = new ImageIcon[]{
                 new ImageIcon("src/pics/player/plr0.png"),
