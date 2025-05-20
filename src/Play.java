@@ -179,7 +179,7 @@ public class Play {
 
     private void startCoinSpawner() {
         coinSpawnTimer = new Timer(coinSpawnDelay, e -> {
-            Coin coin = new Coin(score);
+            Coin coin = new Coin();
             coins.add(coin);
             panel.add(coin.getLabel(), 0);
             panel.repaint();
