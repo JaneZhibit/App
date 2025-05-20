@@ -277,10 +277,9 @@ public class Play {
         gameOverLabel.setForeground(Color.WHITE);
         overlay.add(gameOverLabel);
 
-        panel.add(overlay, 0); // Добавляем выше всех
+        panel.add(overlay, 0);
         panel.repaint();
 
-        // Завершаем игру через 4 секунды
         new Timer(4000, e -> exit()).start();
     }
 

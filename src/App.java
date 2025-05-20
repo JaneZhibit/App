@@ -47,8 +47,6 @@ public class App extends JFrame {
         switchPanel(Upgrades.getProxy().getPanel());
     }
 
-
-
     private void switchPanel(JComponent panel) {
         getContentPane().removeAll();
         getContentPane().add(panel);

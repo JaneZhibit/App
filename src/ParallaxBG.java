@@ -51,7 +51,6 @@ public class ParallaxBG extends JPanel implements Runnable {
         for (int i = 0; i < layers.length; i++) {
             xPositions[i] -= speeds[i];
 
-            // Зацикливание фона
             if (xPositions[i] <= -layerWidths[i]) {
                 xPositions[i] += layerWidths[i];
             }

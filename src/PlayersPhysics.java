@@ -21,7 +21,7 @@ public class PlayersPhysics {
 
     private Timer rotationTimer; // Таймер для плавного изменения угла
 
-    private volatile int currentFrameIndex = 0;
+    private int currentFrameIndex = 0;
     private Thread animationThread;
     private static ImageIcon[] cachedFrames;
 
@@ -136,7 +136,7 @@ public class PlayersPhysics {
     }
 
 
-    private void initAnimation() { //обновленная анимация - без повторной постоянной загрузки файлов
+    private void initAnimation() { // обновленная анимация - без повторной постоянной загрузки файлов
         // Проверяем, загружены ли кадры в кэш
         if (cachedFrames == null) {
             cachedFrames = new ImageIcon[13];
