@@ -6,11 +6,14 @@ public class Coin {
     private JLabel coinLabel;
     private boolean collected = false;
     private int speed = 6;
+    private ScoreCounter scoreCounter;
+
 
     private static final int PANEL_HEIGHT = App.getProxy().h;
     private static final int PANEL_WIDTH = App.getProxy().w;
 
-    public Coin() {
+    public Coin(ScoreCounter scoreCounter) {
+        this.scoreCounter = scoreCounter; // Инициализация счетчика очков
         ImageIcon icon = new ImageIcon("src/pics/play/coin.png");
         coinLabel = new JLabel(icon);
 

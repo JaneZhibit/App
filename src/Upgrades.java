@@ -20,6 +20,7 @@ public class Upgrades {
 
     public void refresh() {
         totalPoints = getTotalPoints();
+        updateBroomButtons(App.getProxy().getSelectedBroomName());
         pointsLabel.setText("Всего очков: " + totalPoints);
     }
 
@@ -110,6 +111,11 @@ public class Upgrades {
 
             button.addActionListener(e -> {
                 if (totalPoints >= broom.cost) {
+
+                    totalPoints -= broom.cost;
+                    App.getProxy().getConfig().setProperty("totalPoints", String.valueOf(totalPoints));
+                    App.getProxy().saveConfig();
+
                     App.getProxy().setSelectedBroom(broom.name());
                     updateBroomButtons(broom.name()); //
                 } else {
@@ -127,14 +133,23 @@ public class Upgrades {
     }
 
     private void updateBroomButtons(String selectedBroom) {
+        totalPoints = getTotalPoints();
+        pointsLabel.setText("Всего очков: " + totalPoints);
+
         for (Broom broom : broomButtons.keySet()) {
             JButton btn = broomButtons.get(broom);
+
             if (broom.name().equals(selectedBroom)) {
+                // Выбранная метла
                 btn.setText("Выбрана");
                 btn.setEnabled(false);
+                btn.setBackground(new Color(200, 255, 200)); // Зелёный фон для выбранной
             } else {
-                btn.setText("Выбрать");
-                btn.setEnabled(true);
+                // Невыбранные метлы
+                boolean canAfford = totalPoints >= broom.cost;
+                btn.setText(canAfford ? "Выбрать" : "Недостаточно очков");
+                btn.setEnabled(canAfford);
+                btn.setBackground(canAfford ? new Color(220, 220, 255) : new Color(255, 200, 200));
             }
         }
     }

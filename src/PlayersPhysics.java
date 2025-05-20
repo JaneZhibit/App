@@ -23,6 +23,7 @@ public class PlayersPhysics {
 
     private volatile int currentFrameIndex = 0;
     private Thread animationThread;
+    private static ImageIcon[] cachedFrames;
 
     private int lives;
     private JLabel livesLabel;
@@ -130,37 +131,33 @@ public class PlayersPhysics {
 
     public Rectangle getHitbox() {
         Rectangle bounds = player.getBounds();
-        return new Rectangle(bounds.x, bounds.y,
-                336, 180);
+        return new Rectangle(bounds.x+100, bounds.y,
+                206, 180);
     }
 
-    private void initAnimation() {
-        ImageIcon[] animationFrames = new ImageIcon[]{
-                new ImageIcon("src/pics/player/plr0.png"),
-                new ImageIcon("src/pics/player/plr1.png"),
-                new ImageIcon("src/pics/player/plr2.png"),
-                new ImageIcon("src/pics/player/plr3.png"),
-                new ImageIcon("src/pics/player/plr4.png"),
-                new ImageIcon("src/pics/player/plr5.png"),
-                new ImageIcon("src/pics/player/plr6.png"),
-                new ImageIcon("src/pics/player/plr7.png"),
-                new ImageIcon("src/pics/player/plr8.png"),
-                new ImageIcon("src/pics/player/plr9.png"),
-                new ImageIcon("src/pics/player/plr10.png"),
-                new ImageIcon("src/pics/player/plr11.png"),
-                new ImageIcon("src/pics/player/plr12.png")
-        };
 
+    private void initAnimation() { //обновленная анимация - без повторной постоянной загрузки файлов
+        // Проверяем, загружены ли кадры в кэш
+        if (cachedFrames == null) {
+            cachedFrames = new ImageIcon[13];
+            for (int i = 0; i < cachedFrames.length; i++) {
+                String path = "src/pics/player/plr" + i + ".png";
+                cachedFrames[i] = new ImageIcon(path);
+            }
+        }
 
-        originalIcon = animationFrames[0];
+        originalIcon = cachedFrames[0];
+        currentFrameIndex = 0;
 
+        // Запускаем анимацию
         animationThread = new Thread(() -> {
             while (!Thread.currentThread().isInterrupted()) {
                 try {
                     Thread.sleep(200);
+
                     SwingUtilities.invokeLater(() -> {
-                        currentFrameIndex = (currentFrameIndex + 1) % animationFrames.length;
-                        originalIcon = animationFrames[currentFrameIndex];
+                        currentFrameIndex = (currentFrameIndex + 1) % cachedFrames.length;
+                        originalIcon = cachedFrames[currentFrameIndex];
                         updateRotation();
                     });
                 } catch (InterruptedException e) {
@@ -168,6 +165,7 @@ public class PlayersPhysics {
                 }
             }
         });
+
         animationThread.setDaemon(true);
         animationThread.start();
     }

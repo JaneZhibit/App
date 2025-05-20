@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 
+
 public class ScoreCounter {
     private JLabel scoreLabel; // Для отображения счета
     private int score; // Переменная для хранения счета
@@ -23,7 +24,7 @@ public class ScoreCounter {
         scoreThread = new Thread(() -> {
             while (running) {
                 try {
-                    Thread.sleep(50);
+                    Thread.sleep(100);
                     score++;
                     scoreLabel.setText("Score: " + score);
                     scoreLabel.setFont(new Font("Arial",1, 20));

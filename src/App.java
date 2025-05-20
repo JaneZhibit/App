@@ -43,6 +43,7 @@ public class App extends JFrame {
 
     public void showUpgrades() {
         Upgrades.getProxy().refresh();
+
         switchPanel(Upgrades.getProxy().getPanel());
     }
 
