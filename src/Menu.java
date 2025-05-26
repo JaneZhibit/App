@@ -22,7 +22,7 @@ public class Menu {
         addBackground();
     }
 
-    // Singleton
+
     public static Menu getProxy() {
         if (proxy == null) {
             proxy = new Menu();
@@ -71,7 +71,7 @@ public class Menu {
         exitButton.addActionListener(e -> System.exit(0));
     }
 
-    // для красоты конструктора решил вынести в отдельную функци
+
     private void addBackground() {
         JLabel bg = new JLabel(new ImageIcon("src/pics/menu_bg.png"));
         bg.setBounds(0, 0, w, h);

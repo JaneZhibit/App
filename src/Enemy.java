@@ -12,7 +12,7 @@ public class Enemy {
 
     public Enemy(int speed) {
         this.speed = speed;
-        ImageIcon icon = new ImageIcon("src/pics/play/enemy.png"); // добавь картинку
+        ImageIcon icon = new ImageIcon("src/pics/play/enemy.png");
         enemyLabel = new JLabel(icon);
 
         Random rand = new Random();
