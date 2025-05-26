@@ -24,6 +24,7 @@ public class PlayersPhysics {
     private int currentFrameIndex = 0;
     private Thread animationThread;
     private static ImageIcon[] cachedFrames;
+    private boolean forward = true;
 
     private int lives;
     private JLabel livesLabel;
@@ -154,18 +155,29 @@ public class PlayersPhysics {
             while (!Thread.currentThread().isInterrupted()) {
                 try {
                     Thread.sleep(200);
+                    if (forward) {
+                        currentFrameIndex++;
+                        if (currentFrameIndex >= cachedFrames.length - 1) {
+                            forward = false; // Меняем направление
+                        }
+                    } else {
+                        currentFrameIndex--;
+                        if (currentFrameIndex <= 0) {
+                            forward = true; // Меняем направление
+                        }
+                    }
+                    originalIcon = cachedFrames[currentFrameIndex];
+                    updateRotation();
 
-                    SwingUtilities.invokeLater(() -> {
-                        currentFrameIndex = (currentFrameIndex + 1) % cachedFrames.length;
-                        originalIcon = cachedFrames[currentFrameIndex];
-                        updateRotation();
-                    });
+//                    currentFrameIndex = (currentFrameIndex + 1) % cachedFrames.length;
+//
+//                    originalIcon = cachedFrames[currentFrameIndex];
+//                    updateRotation();
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
             }
         });
-
         animationThread.setDaemon(true);
         animationThread.start();
     }

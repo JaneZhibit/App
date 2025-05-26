@@ -16,6 +16,7 @@ public class Play {
     private int enemySpawnDelay;
     private int coinSpawnDelay;
     private int playerStartLives;
+    private int[] speedsBG;
     private String difficulty;
 
     private ScoreCounter score = new ScoreCounter();
@@ -42,18 +43,24 @@ public class Play {
                 enemySpawnDelay = 3500;
                 coinSpawnDelay = 1500;
                 playerStartLives = 5;
+                speedsBG = new int[]{1, 3, 8};
+
                 break;
             case "Сложный":
-                enemySpeed = 7;
+                enemySpeed = 10;
                 enemySpawnDelay = 2000;
                 coinSpawnDelay = 3500;
                 playerStartLives = 2;
+                speedsBG = new int[]{2, 7, 17};
+
                 break;
             default: // Средний
                 enemySpeed = 6;
                 enemySpawnDelay = 3000;
                 coinSpawnDelay = 2500;
                 playerStartLives = 3;
+                speedsBG = new int[]{2, 4, 11};
+
                 break;
         }
 
@@ -99,11 +106,10 @@ public class Play {
                 "src/pics/parallaxBG/2.png"
         };
 
-        int[] speeds = {1, 3, 10};
         int[] yPositions = {0, h - 573, h - 299};
         int[] layerWidths = {2024, 2024, 2024};
         int[] layerHeights = {768, 573, 299};
-        parallaxBackground = new ParallaxBG(backgrounds, speeds, yPositions, layerWidths, layerHeights, w, h);
+        parallaxBackground = new ParallaxBG(backgrounds, speedsBG, yPositions, layerWidths, layerHeights, w, h);
         panel.add(parallaxBackground);
     }
 

@@ -12,12 +12,10 @@ public class Enemy {
 
     public Enemy(int speed) {
         this.speed = speed;
-        Random rand = new Random();
-        String path = "src/pics/play/enemies/enemy" + rand.nextInt(5) + ".png";
-        ImageIcon icon = new ImageIcon(path);
-
+        ImageIcon icon = new ImageIcon("src/pics/play/enemy.png");
         enemyLabel = new JLabel(icon);
 
+        Random rand = new Random();
         int x = PANEL_WIDTH + rand.nextInt(300);
         int y = rand.nextInt(PANEL_HEIGHT - icon.getIconHeight() - 50);
         enemyLabel.setBounds(x, y, icon.getIconWidth(), icon.getIconHeight());
