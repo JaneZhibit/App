@@ -1,3 +1,9 @@
+package play.components;
+
+import app.App;
+import utils.ImageUtils;
+import panels.upgrData.Broom;
+
 import javax.swing.*;
 import javax.swing.Timer;
 import java.awt.*;
@@ -169,10 +175,6 @@ public class PlayersPhysics {
                     originalIcon = cachedFrames[currentFrameIndex];
                     updateRotation();
 
-//                    currentFrameIndex = (currentFrameIndex + 1) % cachedFrames.length;
-//
-//                    originalIcon = cachedFrames[currentFrameIndex];
-//                    updateRotation();
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }

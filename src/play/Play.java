@@ -1,9 +1,14 @@
+package play;
+
+import app.App;
+import utils.SoundPlayer;
+import play.components.*;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class Play {
     private JPanel panel;
@@ -30,9 +35,6 @@ public class Play {
 
     private PlayersPhysics playersPhysics;
 
-
-
-
     public Play() {
 
         difficulty = App.getProxy().getConfig().getProperty("difficulty", "Средний");
@@ -47,15 +49,15 @@ public class Play {
 
                 break;
             case "Сложный":
-                enemySpeed = 10;
-                enemySpawnDelay = 2000;
+                enemySpeed = 14;
+                enemySpawnDelay = 1300;
                 coinSpawnDelay = 3500;
                 playerStartLives = 2;
                 speedsBG = new int[]{2, 7, 17};
 
                 break;
             default: // Средний
-                enemySpeed = 6;
+                enemySpeed = 7;
                 enemySpawnDelay = 3000;
                 coinSpawnDelay = 2500;
                 playerStartLives = 3;
@@ -123,6 +125,10 @@ public class Play {
             @Override
             public void keyPressed(KeyEvent e) {
                 String keyName = KeyEvent.getKeyText(e.getKeyCode());
+
+//                if (bossFightActive && bossFightController != null) {
+//                    bossFightController.handleKeyPress(keyName);
+//                }
 
                 if (keyName.equals(moveUpKey)) {
                     playersPhysics.moveUp();
@@ -276,7 +282,6 @@ public class Play {
         if (coinMoveTimer != null) coinMoveTimer.stop();
         coins.clear();
         if (enemyMoveTimer != null) enemyMoveTimer.stop();
-
 
         JLabel gameOverLabel = new JLabel("Игра окончена! Счёт: " + finalScore);
         gameOverLabel.setFont(new Font("Arial", Font.BOLD, 36));

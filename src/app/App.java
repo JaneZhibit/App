@@ -1,3 +1,10 @@
+package app;
+
+import panels.Menu;
+import panels.Settings;
+import panels.Upgrades;
+import play.Play;
+
 import javax.swing.*;
 import java.io.*;
 import java.util.Properties;
@@ -9,7 +16,7 @@ public class App extends JFrame {
     public final int w = 1280, h = 720;
 
     private App() {
-        super("Harry Potter and Automat po Proge");
+        super("Harry Potter and Broom collapse");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(w, h);
         setLayout(null);
@@ -85,7 +92,6 @@ public class App extends JFrame {
         config.setProperty("selectedBroom", broomName);
         saveConfig();
     }
-
 
     public static void main(String[] args) {
         getProxy().showMenu();

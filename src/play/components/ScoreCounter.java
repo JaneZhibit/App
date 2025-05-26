@@ -1,3 +1,5 @@
+package play.components;
+
 import javax.swing.*;
 import java.awt.*;
 

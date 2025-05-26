@@ -1,3 +1,5 @@
+package panels.upgrData;
+
 public enum Broom {
     BASIC("Обычная", 0, 0.025, 0.35, 0, 35),
     NIMBUS("Нимбус 2000", 5000, 0.045, 0.45, 0, 45),

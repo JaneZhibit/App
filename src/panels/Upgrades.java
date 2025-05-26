@@ -1,8 +1,14 @@
+package panels;
+
 import javax.swing.*;
 import java.awt.*;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import app.App;
+import panels.upgrData.Broom;
+
 
 public class Upgrades {
     private static Upgrades proxy;
@@ -11,7 +17,7 @@ public class Upgrades {
     private int totalPoints;
     private JLabel pointsLabel;
     private java.util.Map<Broom, JButton> broomButtons = new java.util.HashMap<>();
-    private Set<String> purchasedBrooms = new HashSet<>(); //для защиты от повторного добавления
+    private Set<String> purchasedBrooms = new HashSet<>(); // для защиты от повторного добавления
 
 
     public Upgrades() {

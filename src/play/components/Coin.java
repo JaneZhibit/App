@@ -1,3 +1,7 @@
+package play.components;
+
+import app.App;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Random;

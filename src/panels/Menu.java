@@ -1,5 +1,8 @@
+package panels;
+
+import app.App;
+import utils.SoundPlayer;
 import javax.swing.*;
-import java.awt.*;
 
 public class Menu {
 

@@ -1,8 +1,9 @@
-/*
-Класс отображения настроек и сохранения настроек
- */
+package panels;
+import app.App;
 
 import javax.swing.*;
+import utils.BindKeyListener;
+import utils.SoundPlayer;
 
 public class Settings {
     private static Settings proxy;
