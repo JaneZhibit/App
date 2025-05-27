@@ -79,6 +79,7 @@ public class Play {
         initKeyListener();
         updateKeyBindings();
 
+
         startCoinLogic();
         startEnemyLogic();
 
@@ -104,6 +105,7 @@ public class Play {
     private void initPlayer() {
         panel.add(playersPhysics.getPlayer());
         panel.add(playersPhysics.getLivesLabel());
+
 
     }
 
@@ -294,8 +296,22 @@ public class Play {
         if (enemySpawnTimer != null) enemySpawnTimer.stop();
         if (coinSpawnTimer != null) coinSpawnTimer.stop();
         boss = new Boss(w, h);
+        new SoundPlayer("src/audio/boss_apear.wav").play();
         boss.enter();
         panel.add(boss, 0);
+
+        JLabel warningLabel = new JLabel("ПРИГОТОВЬСЯ К БИТВЕ!", JLabel.CENTER);
+        warningLabel.setFont(new Font("Arial", Font.BOLD, 48));
+        warningLabel.setForeground(Color.WHITE);
+        warningLabel.setBounds(0, h / 2 - 50, w, 100);
+        warningLabel.setOpaque(false);
+
+        panel.add(warningLabel, 0);
+        panel.repaint();
+        new Timer(3000, e -> {
+            panel.remove(warningLabel);
+            panel.repaint();
+        }).start();
     }
 
     private void startBossFight(){
@@ -303,7 +319,7 @@ public class Play {
         if (coinMoveTimer != null) coinMoveTimer.stop();
         bossTransitionTimer.stop();
 
-        // создаётся экземпляр контроллера. В него передается функция, которая исполнится в конце боя с боссом
+        //экземпляр контроллера; передача функции, которая исполнится в конце боя с боссом
         bossFightController = new BossFightController(win -> { // функция для исполнения
             panel.remove(bossFightController); // контроллер удаляем
             panel.repaint(); // перерисовка
@@ -318,9 +334,9 @@ public class Play {
 
             waitingBoss();
 
-            if (win) { // если победа
+            if (win) { // победа
                 score.add(1000);
-            } else { // если поражение
+            } else { // поражение
                 new SoundPlayer("src/audio/damage.wav").play();
                 if (playersPhysics.damage()){ // когда жизни заканчиваются
                     new SoundPlayer("src/audio/gameOver.wav").play();

@@ -11,7 +11,7 @@ public class Boss extends JComponent {
     private Timer exitTimer;
 
     public Boss(int screenW, int screenH) {
-        ImageIcon icon = new ImageIcon("src/pics/boss.png");
+        ImageIcon icon = new ImageIcon("src/pics/bosss.png");
         image = icon.getImage();
 
         int width = icon.getIconWidth();
@@ -21,7 +21,7 @@ public class Boss extends JComponent {
         y = screenH / 2 - height / 2;
         currentX = screenW; // начинаем за правым краем
 
-        setBounds(0, 0, screenW, screenH); // компонент занимает весь экран (или панель)
+        setBounds(0, 0, screenW, screenH); // компонент занимает весь экран (панель)
         setOpaque(false);
     }
 

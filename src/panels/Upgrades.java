@@ -41,11 +41,8 @@ public class Upgrades {
     }
     // Сохраняем список купленных метел в конфиг
     private void savePurchasedBrooms() {
-        StringBuilder sb = new StringBuilder();
-        for (String broom : purchasedBrooms) {
-            sb.append(broom).append(",");
-        }
-        App.getProxy().getConfig().setProperty("purchasedBrooms", sb.toString());
+        String result = String.join(",", purchasedBrooms) + ",";
+        App.getProxy().getConfig().setProperty("purchasedBrooms", result);
         App.getProxy().saveConfig();
     }
 

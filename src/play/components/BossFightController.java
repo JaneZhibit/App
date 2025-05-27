@@ -8,17 +8,17 @@ import java.util.function.Consumer;
 
 public class BossFightController extends JComponent {
     private final String[] keys = {"u", "i", "j", "p", "m"}; // кнопки для игры
-    private String currentKey; // которую надо нажать, выбирается случайно
+    private String currentKey; // кнопка, которую надо нажать, выбирается случайно
     private int progress = 35; // начальный прогресс
     private final int maxProgress = 100; // таргет
     private Timer lowerProgressTimer; // таймер, который понижает progress
-    private final Consumer<Boolean> resultCallback; // функциональный интерфейс (почитай, что это)
+    private final Consumer<Boolean> resultCallback; // для обработки результат
     private final Random random = new Random();
 
-    public BossFightController(Consumer<Boolean> resultCallback ) { // при вызове accept вызовется функция, которую я сюда передам из Play
+    public BossFightController(Consumer<Boolean> resultCallback ) { // при вызове accept вызовется функция из play(победа или поражение)
         this.resultCallback = resultCallback; // сохраняется переданная функция
 
-        // делает фокусируемым
+        // фокусировка
         setFocusable(true);
         setRequestFocusEnabled(true);
         setOpaque(false); // отключение непрозрачности
@@ -38,7 +38,7 @@ public class BossFightController extends JComponent {
         });
         lowerProgressTimer.start();
 
-        // свой KeyListener у BossFightController. Решил не передавать из play, собственно поэтому и передаю фокусировку.
+        // отдельный KeyListener для BossFightController
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -49,7 +49,7 @@ public class BossFightController extends JComponent {
         });
     }
 
-    // выбирает клавишу для нажатия
+    // генерация букв для нажатия
     private void chooseNextKey() {
         currentKey = keys[random.nextInt(keys.length)];
         repaint();
@@ -58,11 +58,11 @@ public class BossFightController extends JComponent {
     // функция проверки нажатия и работы с прогрессом
     private void handleKeyPress(String key) {
         if (key.equalsIgnoreCase(currentKey)) {
-            progress += 10;
+            progress += 15;
             if (progress >= maxProgress) {
                 progress = maxProgress;
                 lowerProgressTimer.stop();
-                resultCallback.accept(true); // если прогресса достаточно, то мы вызываем функцию с win=true
+                resultCallback.accept(true); // если прогресса достаточно, то вызов win=true
             } else {
                 chooseNextKey();
             }
@@ -70,6 +70,7 @@ public class BossFightController extends JComponent {
         }
     }
 
+    // Отрисовка
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
