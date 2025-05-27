@@ -17,11 +17,12 @@ public class Play {
     private String moveUpKey, moveDownKey;
     private ParallaxBG parallaxBackground;
 
+    // параметры зависят от уровня сложности
     private int enemySpeed;
     private int enemySpawnDelay;
     private int coinSpawnDelay;
     private int playerStartLives;
-    private int[] speedsBG;
+    private int bgSpeedCoef;
     private String difficulty;
 
     private ScoreCounter score = new ScoreCounter();
@@ -35,6 +36,12 @@ public class Play {
 
     private PlayersPhysics playersPhysics;
 
+    private Timer bossWaitTimer, bossTransitionTimer;
+    private Boss boss;
+    private BossFightController bossFightController;
+
+    private boolean background = false;
+
     public Play() {
 
         difficulty = App.getProxy().getConfig().getProperty("difficulty", "Средний");
@@ -45,24 +52,21 @@ public class Play {
                 enemySpawnDelay = 3500;
                 coinSpawnDelay = 1500;
                 playerStartLives = 5;
-                speedsBG = new int[]{1, 3, 8};
-
+                bgSpeedCoef = 1;
                 break;
             case "Сложный":
                 enemySpeed = 14;
                 enemySpawnDelay = 1300;
                 coinSpawnDelay = 3500;
                 playerStartLives = 2;
-                speedsBG = new int[]{2, 7, 17};
-
+                bgSpeedCoef = 3;
                 break;
             default: // Средний
                 enemySpeed = 7;
                 enemySpawnDelay = 3000;
                 coinSpawnDelay = 2500;
                 playerStartLives = 3;
-                speedsBG = new int[]{2, 4, 11};
-
+                bgSpeedCoef = 2;
                 break;
         }
 
@@ -71,12 +75,14 @@ public class Play {
         panel.add(score.getScoreLabel());
         initButtons();
         initPlayer();
-        initBackground();
+        initBackgroundDynamic();
         initKeyListener();
         updateKeyBindings();
 
         startCoinLogic();
         startEnemyLogic();
+
+        waitingBoss();
     }
 
     private void initPanel() {
@@ -111,9 +117,43 @@ public class Play {
         int[] yPositions = {0, h - 573, h - 299};
         int[] layerWidths = {2024, 2024, 2024};
         int[] layerHeights = {768, 573, 299};
+        int[] speedsBG = {bgSpeedCoef, 3*bgSpeedCoef, 7*bgSpeedCoef};
         parallaxBackground = new ParallaxBG(backgrounds, speedsBG, yPositions, layerWidths, layerHeights, w, h);
         panel.add(parallaxBackground);
     }
+
+    private void initBackground2() {
+        String[] backgrounds = {
+                "src/pics/parallaxBG/b1.png",
+                "src/pics/parallaxBG/b2.png",
+                "src/pics/parallaxBG/b3.png",
+                "src/pics/parallaxBG/b4.png",
+                "src/pics/parallaxBG/b5.png"
+        };
+
+        int[] yPositions = {0, h - 743, h - 469, h - 399, h - 456};
+        int[] layerWidths = {3840, 3840, 3840, 3840, 3840};
+        int[] layerHeights = {1080, 743, 469, 399, 456};
+        int[] speedsBG = {bgSpeedCoef, 2*bgSpeedCoef, 3*bgSpeedCoef, 4*bgSpeedCoef, 5*bgSpeedCoef};
+
+        parallaxBackground = new ParallaxBG(backgrounds, speedsBG, yPositions, layerWidths, layerHeights, w, h);
+        panel.add(parallaxBackground);
+    }
+
+    private void initBackgroundDynamic() {
+        if (parallaxBackground != null) {
+            panel.remove(parallaxBackground); // удаляем предыдущий фон
+            parallaxBackground.stop();
+        }
+        if (background) {
+            initBackground();
+        } else {
+            initBackground2();
+        }
+        background = !background;
+        panel.repaint();
+    }
+
 
     private void updateKeyBindings() {
         moveUpKey = App.getProxy().getConfig().getProperty("moveUpKey", "W");
@@ -125,11 +165,6 @@ public class Play {
             @Override
             public void keyPressed(KeyEvent e) {
                 String keyName = KeyEvent.getKeyText(e.getKeyCode());
-
-//                if (bossFightActive && bossFightController != null) {
-//                    bossFightController.handleKeyPress(keyName);
-//                }
-
                 if (keyName.equals(moveUpKey)) {
                     playersPhysics.moveUp();
                 } else if (keyName.equals(moveDownKey)) {
@@ -170,6 +205,7 @@ public class Play {
                         new SoundPlayer("src/audio/damage.wav").play();
                         if (playersPhysics.damage()){ // когда жизни заканчиваются
                             new SoundPlayer("src/audio/gameOver.wav").play();
+                            stopBossLogic();
                             showGameOverScreen(score.getScore());
                         }
                         toRemove.add(enemy);
@@ -245,10 +281,85 @@ public class Play {
         App.getProxy().saveConfig();
     }
 
+    private void waitingBoss(){
+        bossWaitTimer = new Timer(10_000, e -> bossTransition());
+        bossWaitTimer.setRepeats(false);
+        bossWaitTimer.start();
+    }
+
+    private void bossTransition(){
+        bossTransitionTimer = new Timer(7_000, e -> startBossFight());
+        bossTransitionTimer.start();
+        bossWaitTimer.stop();
+        if (enemySpawnTimer != null) enemySpawnTimer.stop();
+        if (coinSpawnTimer != null) coinSpawnTimer.stop();
+        boss = new Boss(w, h);
+        boss.enter();
+        panel.add(boss, 0);
+    }
+
+    private void startBossFight(){
+        if (enemyMoveTimer != null) enemyMoveTimer.stop();
+        if (coinMoveTimer != null) coinMoveTimer.stop();
+        bossTransitionTimer.stop();
+
+        // создаётся экземпляр контроллера. В него передается функция, которая исполнится в конце боя с боссом
+        bossFightController = new BossFightController(win -> { // функция для исполнения
+            panel.remove(bossFightController); // контроллер удаляем
+            panel.repaint(); // перерисовка
+            boss.exit(); // босс уходит
+            initBackgroundDynamic();
+            panel.requestFocusInWindow(); // возвращаем фокус на панель
+
+            enemySpawnTimer.start();
+            enemyMoveTimer.start();
+            coinSpawnTimer.start();
+            coinMoveTimer.start();
+
+            waitingBoss();
+
+            if (win) { // если победа
+                score.add(1000);
+            } else { // если поражение
+                new SoundPlayer("src/audio/damage.wav").play();
+                if (playersPhysics.damage()){ // когда жизни заканчиваются
+                    new SoundPlayer("src/audio/gameOver.wav").play();
+                    showGameOverScreen(score.getScore());
+                }
+            }
+        });
+
+        panel.add(bossFightController, 0);
+        bossFightController.requestFocusInWindow();
+    }
+
+    private void stopBossLogic() {
+        if (bossWaitTimer != null) {
+            bossWaitTimer.stop();
+            bossWaitTimer = null;
+        }
+
+        if (bossTransitionTimer != null) {
+            bossTransitionTimer.stop();
+            bossTransitionTimer = null;
+        }
+
+        if (bossFightController != null) {
+            panel.remove(bossFightController);
+            bossFightController = null;
+        }
+
+        if (boss != null) {
+            panel.remove(boss);
+            boss = null;
+        }
+    }
+
     private void exit(){
         backgroundMusic.stop();
         parallaxBackground.stop();
         score.stopScoreUpdater();
+        stopBossLogic();
         deleteObjects();
         App.getProxy().showMenu();
     }
