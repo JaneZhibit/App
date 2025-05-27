@@ -8,61 +8,57 @@ import java.util.function.Consumer;
 
 public class BossFightController extends JComponent {
     private final String[] keys = {"u", "i", "j", "p", "m"}; // кнопки для игры
-    private String currentKey; // кнопка, которую надо нажать, выбирается случайно
-    private int progress = 35; // начальный прогресс
-    private final int maxProgress = 100; // таргет
-    private Timer lowerProgressTimer; // таймер, который понижает progress
-    private final Consumer<Boolean> resultCallback; // для обработки результат
+    private String currentKey;
+    private int progress = 35;
+    private final int maxProgress = 100;
+    private Timer lowerProgressTimer;
+    private final Consumer<Boolean> resultCallback;
     private final Random random = new Random();
 
-    public BossFightController(Consumer<Boolean> resultCallback ) { // при вызове accept вызовется функция из play(победа или поражение)
-        this.resultCallback = resultCallback; // сохраняется переданная функция
+    public BossFightController(Consumer<Boolean> resultCallback ) {
+        this.resultCallback = resultCallback;
 
         // фокусировка
         setFocusable(true);
         setRequestFocusEnabled(true);
         setOpaque(false); // отключение непрозрачности
-        setBounds(0, 0, 1280, 720); // задает размеры на весь экран
+        setBounds(0, 0, 1280, 720);
 
         chooseNextKey(); // выбирает клавишу для нажатия
 
         // Уменьшение прогресса
-        lowerProgressTimer = new Timer(100, e -> { // каждую 0,1 секунду убавляем прогресс на 1
+        lowerProgressTimer = new Timer(100, e -> {
             if (progress > 0) {
-                progress--;
+                progress -= 2;
                 repaint();
             } else {
                 lowerProgressTimer.stop();
-                resultCallback.accept(false); // если проиграли, то вызываем функцию с win = false
+                resultCallback.accept(false);
             }
         });
         lowerProgressTimer.start();
 
-        // отдельный KeyListener для BossFightController
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 String key = KeyEvent.getKeyText(e.getKeyCode()).toLowerCase();
-                if (key.equals("space")) key = "space";
-                handleKeyPress(key); // функция проверки нажатия и работы с прогрессом
+                handleKeyPress(key);
             }
         });
     }
 
-    // генерация букв для нажатия
     private void chooseNextKey() {
         currentKey = keys[random.nextInt(keys.length)];
         repaint();
     }
 
-    // функция проверки нажатия и работы с прогрессом
     private void handleKeyPress(String key) {
         if (key.equalsIgnoreCase(currentKey)) {
-            progress += 15;
+            progress += 25;
             if (progress >= maxProgress) {
                 progress = maxProgress;
                 lowerProgressTimer.stop();
-                resultCallback.accept(true); // если прогресса достаточно, то вызов win=true
+                resultCallback.accept(true);
             } else {
                 chooseNextKey();
             }

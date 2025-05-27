@@ -9,7 +9,7 @@ import java.util.Random;
 public class Coin {
     private JLabel coinLabel;
     private boolean collected = false;
-    private int speed = 6;
+    private int speed = 9;
 
 
     private static final int PANEL_HEIGHT = App.getProxy().h;
